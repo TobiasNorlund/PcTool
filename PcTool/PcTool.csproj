@@ -51,6 +51,9 @@
     <Reference Include="AvalonDock.Themes.VS2010">
       <HintPath>..\packages\AvalonDock.2.0.1746\lib\net40\AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
