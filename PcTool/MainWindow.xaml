@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avalonDock="http://avalondock.codeplex.com"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PcTool.MainWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        DataContext="{StaticResource ViewModel}"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
         <avalonDock:DockingManager x:Name="dockingManager" Loaded="dockingManager_Loaded">
@@ -114,40 +116,13 @@
                                 	<Button Margin="0,68.16,8,117.404" HorizontalAlignment="Right" Width="54.485">
                                 		<Image Source="Images/arrow_right.png"/>
                                 	</Button>
-                                	<Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Background="#FF952D2D" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White"/></Grid>
+                                	<Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Background="#FF952D2D" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Click="Button_Click" /></Grid>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                         <avalonDock:LayoutAnchorablePane>
                             <avalonDock:LayoutAnchorable Title="Debugdata">
-                                 <Border BorderThickness="3,3,3,3" BorderBrush="White" Background="White">
-                            		<Grid>
-                            			<Grid.RowDefinitions>
-                            				<RowDefinition Height="20"/>
-                            				<RowDefinition Height="20"/>
-                            				<RowDefinition Height="20"/>
-                            				<RowDefinition Height="20"/>
-                            				<RowDefinition Height="20"/>
-                            				<RowDefinition/>
-                            			</Grid.RowDefinitions>
-                            			<Grid.ColumnDefinitions>
-                            				<ColumnDefinition Width="0.5*"/>
-                            				<ColumnDefinition Width="0.5*"/>
-
-                            			</Grid.ColumnDefinitions>
-                            			<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Sensor 1"/></TextBlock>
-                            			<TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Sensor 2"/></TextBlock>
-                            			<TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Gyro"/></TextBlock>
-                            			<TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Random var"/></TextBlock>
-                            			<TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Sensor"/><Run Text=" 5"/></TextBlock>
-									
-                            			<TextBlock Grid.Row="0" Grid.Column="1" Text="123" Style="{DynamicResource BlackLabel2}"/>
-                            			<TextBlock Grid.Row="1" Grid.Column="1" Text="123" Style="{DynamicResource BlackLabel2}"/>
-                            			<TextBlock Grid.Row="2" Grid.Column="1" Text="123" Style="{DynamicResource BlackLabel2}"/>
-                            			<TextBlock Grid.Row="3" Grid.Column="1" Text="123" Style="{DynamicResource BlackLabel2}"/>
-                            			<TextBlock Grid.Row="4" Grid.Column="1" Text="123" Style="{DynamicResource BlackLabel2}"/>
-									
-                            		</Grid>
-                            	</Border>
+                                <xctk:PropertyGrid x:Name="_propertyGrid"  SelectedObject="{Binding DebugDataDictionary, Converter={StaticResource PropertyGridVC}}">
+                                </xctk:PropertyGrid>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
