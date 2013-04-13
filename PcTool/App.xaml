@@ -1,19 +1,13 @@
-﻿<Application x:Class="PcTool.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:VM="clr-namespace:PcTool.ViewModel"
-             xmlns:View="clr-namespace:PcTool.View"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-                
-    	<ResourceDictionary>
-    		<ResourceDictionary.MergedDictionaries>
-    			<ResourceDictionary Source="Styles.xaml"/>
-    		</ResourceDictionary.MergedDictionaries>
-            
-            <VM:MainViewModel x:Key="ViewModel"></VM:MainViewModel>
-            <View:DictionaryPropertyGridValueConverter x:Key="PropertyGridVC"></View:DictionaryPropertyGridValueConverter>
-    	</ResourceDictionary>
-         
-    </Application.Resources>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application x:Class="PcTool.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:VM="clr-namespace:PcTool.ViewModel" xmlns:View="clr-namespace:PcTool.View" StartupUri="MainWindow.xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vm="clr-namespace:PcTool.ViewModel" mc:Ignorable="d">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Styles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <vm:MainViewModel x:Key="ViewModel"></vm:MainViewModel>
+      <View:DictionaryPropertyGridValueConverter x:Key="PropertyGridVC"></View:DictionaryPropertyGridValueConverter>
+      <!--<vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />-->
+    </ResourceDictionary>
+  </Application.Resources>
 </Application>

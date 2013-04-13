@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using InTheHand.Net.Sockets;
 using System.Net.Sockets;
-using InTheHand.Net;
-using InTheHand.Net.Bluetooth;
+using System.IO;
+using System.IO.Ports;
 
 namespace PcTool.Logic
 {
@@ -14,28 +13,44 @@ namespace PcTool.Logic
 
         public delegate void DebugDataUpdateHandler(Dictionary<string, int> dict);
         public delegate void MapUpdateHandler(int x, int y, bool isFree);
+        public delegate void ConnectionChangedHandler();
 
+        public static event ConnectionChangedHandler ConnectionChanged;
         public static event DebugDataUpdateHandler DebugDataUpdate;
         public static event MapUpdateHandler MapUpdate;
 
-        private static BluetoothClient client;
-        private static NetworkStream stream;
+        private static SerialPort port;
 
         private static byte[] buffer1;
         private static byte[] buffer2;
 
+        #region Public Properties
+
+        /// <summary>
+        /// Returns whether the software is connected to the robot or not
+        /// </summary>
+        public static bool IsConnected {
+            get { return (port !=null)?port.IsOpen:false; }
+        }
+
+        #endregion
+
         public static void Connect()
         {
-            BluetoothAddress addr = BluetoothAddress.Parse("001122334455");
-            Guid serviceClass;
-            serviceClass = BluetoothService.SerialPort;
+            port = new SerialPort("COM4", 9600, Parity.None, 8, StopBits.One);
+            port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            port.Open();
 
-            var ep = new BluetoothEndPoint(addr, serviceClass);
-            client = new BluetoothClient();
-            client.Connect(ep);
-            stream = client.GetStream();
+            if (ConnectionChanged != null)
+                ConnectionChanged();
+        }
 
-            ReadMessage();
+        // TEMP
+        public static void SendByte(byte b)
+        {
+            byte[] bytes = new byte[1];
+            bytes[0] = b;
+            port.Write(bytes, 0, 1);
         }
 
         public static void SendCommand(int command)
@@ -48,20 +63,15 @@ namespace PcTool.Logic
 
         }
 
-        private static void ReadMessage()
-        {
-            stream.BeginRead(buffer1, 0, 1, new AsyncCallback(ReadCallback), null);
-        }
 
-        private static void ReadCallback(IAsyncResult ar)
+        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
-            stream.EndRead(ar);
 
+/*
             int messageType = buffer1[0] & 248;
             int messageLength = buffer1[0] & 7;
 
-            // Read param
-            stream.Read(buffer2, 0, messageLength);
+            buffer2 = new byte[messageLength];
 
             switch (messageType)
             {
@@ -78,10 +88,7 @@ namespace PcTool.Logic
                 default:
                     // Unsupported, do nothing
                     break;
-            }
-
-            // Read next message
-            stream.BeginRead(buffer1, 0, 1, new AsyncCallback(ReadCallback), null);
+            }*/
         }
 
     }
