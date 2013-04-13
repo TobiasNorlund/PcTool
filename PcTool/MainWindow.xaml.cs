@@ -24,6 +24,7 @@ namespace PcTool
         {
             InitializeComponent();
             Terminal.RegisteredCommands.Add("map");
+            Terminal.RegisteredCommands.Add("write");
 
             ViewModel = ((MainViewModel)App.Current.Resources["ViewModel"]);
             ViewModel.Map.PositionUpdated += mapView.PositionUpdated;

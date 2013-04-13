@@ -21,8 +21,9 @@ namespace PcTool.Logic
 
         private static SerialPort port;
 
-        private static byte[] buffer1;
-        private static byte[] buffer2;
+        // Meddelandespecifika variabler
+        private static byte[] messageBuffer;
+        private static int currentRemainingBytes;
 
         #region Public Properties
 
@@ -63,33 +64,65 @@ namespace PcTool.Logic
 
         }
 
+#region Privat funktionalitet
 
-        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        private static void ParseMessage()
         {
-
-/*
-            int messageType = buffer1[0] & 248;
-            int messageLength = buffer1[0] & 7;
-
-            buffer2 = new byte[messageLength];
+            // Läs ut typen
+            Message.RecieveType messageType = (Message.RecieveType)(messageBuffer[0] & 224);
 
             switch (messageType)
             {
-                case 1:
+                case Message.RecieveType.MAP_DATA:
+                    MapMessage mapmessage = new MapMessage(messageBuffer);
                     if (MapUpdate != null)
-                        MapUpdate(buffer2[0], buffer2[1], buffer2[2] == 0);
+                        MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
                     break;
-                case 2:
-                    Dictionary<string, int> dict = new Dictionary<string, int>();
-                    // ...
+                case Message.RecieveType.DEBUG_DATA:
+                    DebugDataMessage ddmessage = new DebugDataMessage(messageBuffer);
                     if (DebugDataUpdate != null)
-                        DebugDataUpdate(dict);
+                        DebugDataUpdate(ddmessage.Data);
                     break;
+                // TODO: case mottagen styrparameter
                 default:
                     // Unsupported, do nothing
                     break;
-            }*/
+            }
         }
+
+#endregion
+
+#region Eventhantering
+
+        /// <summary>
+        /// När en byte är mottagen från roboten
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            // Om det är början på ett nytt meddelande
+            if (currentRemainingBytes == 0)
+            {
+                byte firstByte = (byte)port.ReadByte();
+                int length = (int)(firstByte & 31);
+                messageBuffer = new byte[length + 1];
+                messageBuffer[0] = firstByte;
+                currentRemainingBytes = length;// - port.BytesToRead;
+                //port.Read(messageBuffer, 1, (port.BytesToRead < length) ? port.BytesToRead : length);
+            }
+            else
+            {
+                currentRemainingBytes -= 1; //port.BytesToRead;
+                port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, 1);
+
+                // Om hela meddelandet nu är hämtat
+                if (currentRemainingBytes == 0)
+                    ParseMessage();
+            }
+        }
+
+#endregion
 
     }
 }

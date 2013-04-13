@@ -13,13 +13,15 @@ namespace PcTool.ViewModel
 
         public MainViewModel()
         {
-            // Set up eventhandlers
-            RobotConnector.ConnectionChanged += () => RaisePropertyChanged("IsConnected");
-
-            // Set up commands
+            // Sätt upp kommandon
             ConnectCommand = new RelayCommand(() => RobotConnector.Connect());
 
+            // Skapa karthantere
             Map = new MapHandler();
+
+            // Sätt upp Eventhanterare
+            RobotConnector.ConnectionChanged += () => RaisePropertyChanged("IsConnected");
+            RobotConnector.MapUpdate += Map.UpdatePosition;
         }
 
         public MapHandler Map { get; set; }

@@ -38,9 +38,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AurelienRibon.Ui.Terminal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\AurelienRibon.Ui.Terminal.dll</HintPath>
+    <Reference Include="AurelienRibon.Ui.Terminal">
+      <HintPath>..\packages\AurelienRibon\AurelienRibon.Ui.Terminal.dll</HintPath>
     </Reference>
     <Reference Include="AvalonDock">
       <HintPath>..\packages\AvalonDock.2.0.1746\lib\net40\AvalonDock.dll</HintPath>
@@ -95,7 +94,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Logic\DebugDataMessage.cs" />
     <Compile Include="Logic\MapHandler.cs" />
+    <Compile Include="Logic\MapMessage.cs" />
+    <Compile Include="Logic\Message.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\DictionaryPropertyGridAdapter.cs" />
     <Compile Include="View\DictionaryPropertyGridValueConverter.cs" />
