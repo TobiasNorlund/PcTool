@@ -40,7 +40,7 @@
   <ItemGroup>
     <Reference Include="AurelienRibon.Ui.Terminal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Downloads\AurelienRibon.Ui.Terminal 1.2.2\AurelienRibon.Ui.Terminal.dll</HintPath>
+      <HintPath>bin\Debug\AurelienRibon.Ui.Terminal.dll</HintPath>
     </Reference>
     <Reference Include="AvalonDock">
       <HintPath>..\packages\AvalonDock.2.0.1746\lib\net40\AvalonDock.dll</HintPath>
