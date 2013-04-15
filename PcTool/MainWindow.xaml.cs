@@ -28,7 +28,11 @@ namespace PcTool
 
             ViewModel = ((MainViewModel)App.Current.Resources["ViewModel"]);
             ViewModel.Map.PositionUpdated += mapView.PositionUpdated;
+            ViewModel.Map.PositionUpdated += temp;
             ViewModel.Map.WallDetected += mapView.WallDetected;
+
+            // Skriv ut vilka bytes som kommer
+            //PcTool.Logic.RobotConnector.newByte += temp2;
         }
 
         private MainViewModel ViewModel;
@@ -65,6 +69,24 @@ namespace PcTool
             ((AurelienRibon.Ui.Terminal.Terminal)sender).InsertNewPrompt();
         }
 
+        private void temp(int x, int y, bool isFree){
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke(new Action(() => temp(x, y, isFree)), null);
+                return;
+            }
 
+            Terminal.Text += (x+8) + " - " + (y+8) + ": " + isFree + Environment.NewLine;
+        }
+
+        private void temp2(byte b){
+            if (!this.Dispatcher.CheckAccess())
+            {
+                this.Dispatcher.Invoke(new Action(() => temp2(b)), null);
+                return;
+            }
+
+            Terminal.Text += b + Environment.NewLine;
+        }
     }
 }

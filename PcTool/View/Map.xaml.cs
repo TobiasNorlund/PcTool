@@ -102,6 +102,12 @@ namespace PcTool.View
 
         public void PositionUpdated(int x, int y, bool isFree)
         {
+            if (!viewMap.Dispatcher.CheckAccess())
+            {
+                viewMap.Dispatcher.Invoke(new Action(() => PositionUpdated(x,y,isFree)), null);
+                return;
+            }
+
             var mesh = new MeshGeometry3D();
             mesh.Positions.Add(new Point3D(x, y, 0));
             mesh.Positions.Add(new Point3D(x + 1, y, 0));
@@ -121,6 +127,12 @@ namespace PcTool.View
 
         public void WallDetected(int x, int y, bool isX)
         {
+            if (!viewMap.Dispatcher.CheckAccess())
+            {
+                viewMap.Dispatcher.Invoke(new Action(() => WallDetected(x, y, isX)), null);
+                return;
+            }
+
             var z = 0.5;
 
             var mesh = new MeshGeometry3D();

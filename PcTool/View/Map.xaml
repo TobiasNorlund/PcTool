@@ -75,6 +75,5 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>-->
         </Viewport3D>
-        <Button Content="Button" Height="23" HorizontalAlignment="Left" Margin="12,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
     </Grid>
 </UserControl>

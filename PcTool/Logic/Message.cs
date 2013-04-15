@@ -41,7 +41,7 @@ namespace PcTool.Logic
         /// <param name="msg">< param>
         public Message(byte[] msg)
         {
-            Type = (byte)(msg[0] & 224);
+            Type = (byte)((msg[0] & 224)>>5);
             Param = new byte[msg.Length - 1];
             Array.Copy(msg, 1, Param, 0, msg.Length - 1);
         }

@@ -15,12 +15,18 @@ namespace PcTool.ViewModel
         {
             // Sätt upp kommandon
             ConnectCommand = new RelayCommand(() => RobotConnector.Connect());
+            DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect());
+            SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)));
 
             // Skapa karthantere
             Map = new MapHandler();
 
             // Sätt upp Eventhanterare
-            RobotConnector.ConnectionChanged += () => RaisePropertyChanged("IsConnected");
+            RobotConnector.ConnectionChanged += delegate()
+            {
+                RaisePropertyChanged("IsConnected");
+                RaisePropertyChanged("IsHandshaked");
+            };
             RobotConnector.MapUpdate += Map.UpdatePosition;
         }
 
@@ -29,6 +35,11 @@ namespace PcTool.ViewModel
         #region Bindable Properties
 
         public bool IsConnected
+        {
+            get { return RobotConnector.IsConnected; }
+        }
+
+        public bool IsHandshaked
         {
             get { return RobotConnector.IsConnected; }
         }
@@ -47,7 +58,10 @@ namespace PcTool.ViewModel
         #region Commands
 
         public RelayCommand ConnectCommand { get; private set; }
+        public RelayCommand DisconnectCommand { get; private set; }
 
+        public RelayCommand<string> SendManualCommand { get; private set; }
+            
         #endregion
 
         #region Event Handlers
