@@ -14,9 +14,10 @@ namespace PcTool.ViewModel
         public MainViewModel()
         {
             // Sätt upp kommandon
-            ConnectCommand = new RelayCommand(() => RobotConnector.Connect());
-            DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect());
-            SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)));
+            ConnectCommand = new RelayCommand(() => RobotConnector.Connect(), isCommandsDisabled);
+            DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect(), isCommandsEnabled);
+            SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsHandshaked; });
+            UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsHandshaked; });
 
             // Skapa karthantere
             Map = new MapHandler();
@@ -61,12 +62,26 @@ namespace PcTool.ViewModel
         public RelayCommand DisconnectCommand { get; private set; }
 
         public RelayCommand<string> SendManualCommand { get; private set; }
+        public RelayCommand<KeyValuePair<ControlParam, byte>> UpdateControlParamCommand { get; private set; }
             
         #endregion
 
+        private bool isCommandsEnabled()
+        {
+            return RobotConnector.IsHandshaked;
+        }
+
+        private bool isCommandsDisabled()
+        {
+            return !RobotConnector.IsHandshaked;
+        }
+
         #region Event Handlers
 
-
+        private void UpdateControlParamHandler(KeyValuePair<ControlParam, byte> controlparam)
+        {
+            RobotConnector.UpdateControlParam(controlparam.Key, controlparam.Value);
+        }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

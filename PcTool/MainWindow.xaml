@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avalonDock="http://avalondock.codeplex.com"
         xmlns:view="clr-namespace:PcTool.View"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="PcTool.MainWindow"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:terminal="clr-namespace:AurelienRibon.Ui.Terminal;assembly=AurelienRibon.Ui.Terminal"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:Custom="http://www.galasoft.ch/mvvmlight" mc:Ignorable="d" x:Class="PcTool.MainWindow"
         DataContext="{StaticResource ViewModel}"
         Title="MainWindow" Height="700" Width="1000">
     <Grid>
@@ -14,29 +15,37 @@
                 
                 <avalonDock:LayoutPanel Orientation="Horizontal">
                     <avalonDock:LayoutAnchorablePaneGroup DockWidth="250" Orientation="Vertical">
-                        <avalonDock:LayoutAnchorablePane DockHeight="0.6*">
+                        <avalonDock:LayoutAnchorablePane DockHeight="130">
                             <avalonDock:LayoutAnchorable Title="Anslutning till robot">
                                 <Grid Background="White">
-                                    <Button Height="40" Command="{Binding ConnectCommand}" HorizontalAlignment="Left" Name="ConnectBtn" VerticalAlignment="Top" Width="100" Content="Anslut" Foreground="White" Margin="10,10,0,0"></Button>
-                                    <Button Height="40" Command="{Binding DisconnectCommand}" Margin="0,10,10,0" HorizontalAlignment="Right" Name="DisconnectBtn" VerticalAlignment="Top" Width="100" Content="Avsluta" Foreground="White"></Button>
+                                    <Button Height="40" Command="{Binding ConnectCommand}" HorizontalAlignment="Left" x:Name="ConnectBtn" VerticalAlignment="Top" Width="100" Content="Anslut" Foreground="White" Margin="10,10,0,0" Style="{DynamicResource ButtonStyle1}">
+                                    	<Button.Background>
+                                    		<SolidColorBrush Color="{DynamicResource Blue1}"/>
+                                    	</Button.Background>
+                                    </Button>
+                                    <Button Height="40" Command="{Binding DisconnectCommand}" Margin="0,10,10,0" HorizontalAlignment="Right" x:Name="DisconnectBtn" VerticalAlignment="Top" Width="100" Content="Avsluta" Foreground="White" Style="{DynamicResource ButtonStyle1}">
+                                    	<Button.Background>
+                                    		<SolidColorBrush Color="{DynamicResource Blue1}"/>
+                                    	</Button.Background>
+                                    </Button>
                                     
-                                    <StackPanel HorizontalAlignment="Left" Margin="0,60,0,0" Name="stackPanel1" VerticalAlignment="Top" Width="200" Orientation="Horizontal" >
-                                        <TextBlock Text="Ansluten till FireFly: "></TextBlock>
-                                        <TextBlock Name="textBlock1" Text="{Binding IsConnected}" VerticalAlignment="Top" />
+                                    <StackPanel HorizontalAlignment="Left" Margin="5,60,0,0" x:Name="stackPanel1" VerticalAlignment="Top" Width="200" Orientation="Horizontal" >
+                                        <TextBlock Text="Ansluten till FireFly: " FontWeight="Bold"/>
+                                        <TextBlock x:Name="textBlock1" Text="{Binding IsConnected}" VerticalAlignment="Top" />
                                     </StackPanel>
-                                    <StackPanel HorizontalAlignment="Left" Margin="0,77,0,0" Name="stackPanel2" Orientation="Horizontal" VerticalAlignment="Top" Width="200">
-                                        <TextBlock Text="Handskakning: " />
-                                        <TextBlock Name="textBlock2" Text="{Binding IsHandshaked}" VerticalAlignment="Top" />
+                                    <StackPanel HorizontalAlignment="Left" Margin="5,77,0,0" x:Name="stackPanel2" Orientation="Horizontal" VerticalAlignment="Top" Width="200">
+                                        <TextBlock Text="Handskakning: " FontWeight="Bold" />
+                                        <TextBlock x:Name="textBlock2" Text="{Binding IsHandshaked}" VerticalAlignment="Top" />
                                     </StackPanel>
                                 </Grid>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
-                        <avalonDock:LayoutAnchorablePane DockHeight="1.5*">
+                        <avalonDock:LayoutAnchorablePane DockHeight="2*">
                             <avalonDock:LayoutAnchorable Title="Rådata">
-                                <terminal:Terminal FontFamily="Consolas" FontSize="10" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Terminal" CommandEntered="Terminal_CommandEntered" />
+                                <terminal:Terminal FontFamily="Consolas" FontSize="10" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" x:Name="Terminal" CommandEntered="Terminal_CommandEntered" />
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
-                        <avalonDock:LayoutAnchorablePane>
+                        <avalonDock:LayoutAnchorablePane DockHeight="1.5*">
                             <avalonDock:LayoutAnchorable Title="Styrparametrar">
                             	<Border BorderThickness="3" BorderBrush="White">
                             		<Grid Background="White" >
@@ -46,30 +55,76 @@
                             				<RowDefinition Height="23"/>
                             				<RowDefinition Height="23"/>
                             				<RowDefinition Height="23"/>
+											<RowDefinition Height="23"/>
+											<RowDefinition Height="23"/>
                             				<RowDefinition/>
                             			</Grid.RowDefinitions>
                             			<Grid.ColumnDefinitions>
                             				<ColumnDefinition Width="0.5*"/>
                             				<ColumnDefinition Width="0.5*"/>
                             				<ColumnDefinition Width="23"/>
+											<!--<ColumnDefinition Width="23"/>-->
                             			</Grid.ColumnDefinitions>
                             			<TextBlock Grid.Row="0" Grid.Column="0" Text="L1, x" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"/>
                             			<TextBlock Grid.Row="1" Grid.Column="0" Text="L2, theta" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"/>
                             			<TextBlock Grid.Row="2" Grid.Column="0" Text="L3, omega" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"/>
                             			<TextBlock Grid.Row="3" Grid.Column="0" Text="L1, theta" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"/>
                             			<TextBlock Grid.Row="4" Grid.Column="0" Text="L2, omega" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"/>
+										<TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Gaspådrag hö"/></TextBlock>
+										<TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Margin="3,0,0,0" Style="{DynamicResource BlackLabel}"><Run Language="sv-se" Text="Gaspådrag vä"/></TextBlock>
 									
-                            			<TextBox Grid.Row="0" Grid.Column="1" />
-                            			<TextBox Grid.Row="1" Grid.Column="1" />
-                            			<TextBox Grid.Row="2" Grid.Column="1" />
-                            			<TextBox Grid.Row="3" Grid.Column="1" />
-                            			<TextBox Grid.Row="4" Grid.Column="1" />
+                            			<TextBox x:Name="ControlParam1" Grid.Row="0" Grid.Column="1" />
+                            			<TextBox x:Name="ControlParam2" Grid.Row="1" Grid.Column="1" />
+                            			<TextBox x:Name="ControlParam3" Grid.Row="2" Grid.Column="1" />
+                            			<TextBox x:Name="ControlParam4" Grid.Row="3" Grid.Column="1" />
+                            			<TextBox x:Name="ControlParam5" Grid.Row="4" Grid.Column="1" />
+										<TextBox x:Name="ControlParam6" Grid.Row="5" Grid.Column="1" />
+										<TextBox x:Name="ControlParam7" Grid.Row="6" Grid.Column="1" />
+										
+										<Button Grid.Row="0" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam1">
+											<Button.Background>
+												<SolidColorBrush Color="#FF959595"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
+										<Button Grid.Row="1" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam2">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/>
+										</Button>
+										<Button Grid.Row="2" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam3">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
+										<Button Grid.Row="3" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam4">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
+										<Button Grid.Row="4" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam5">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
+										<Button Grid.Row="5" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam6">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
+										<Button Grid.Row="6" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam7">
+											<Button.Background>
+												<SolidColorBrush Color="{DynamicResource Gray1}"/>
+											</Button.Background>
+											<Image Height="12" Source="Images/check.png" Stretch="Fill" Width="13"/></Button>
 									
-                            			<Image Grid.Row="0" Grid.Column="2" Source="Images/accept.png" Stretch="None" />
-                            			<Image Grid.Row="1" Grid.Column="2" Source="Images/accept.png" Stretch="None" />
-                            			<Image Grid.Row="2" Grid.Column="2" Source="Images/accept.png" Stretch="None" />
-                            			<Image Grid.Row="3" Grid.Column="2" Source="Images/accept.png" Stretch="None" />
-                            			<Image Grid.Row="4" Grid.Column="2" Source="Images/clock.png" Stretch="None" />
+                            			<!--<Image Grid.Row="0" Grid.Column="3" Source="Images/accept.png" Stretch="None" />
+                            			<Image Grid.Row="1" Grid.Column="3" Source="Images/accept.png" Stretch="None" />
+                            			<Image Grid.Row="2" Grid.Column="3" Source="Images/accept.png" Stretch="None" />
+                            			<Image Grid.Row="3" Grid.Column="3" Source="Images/accept.png" Stretch="None" />
+                            			<Image Grid.Row="4" Grid.Column="3" Source="Images/clock.png" Stretch="None" />
+										<Image Grid.Row="5" Grid.Column="3" Source="Images/clock.png" Stretch="None" />
+										<Image Grid.Row="6" Grid.Column="3" Source="Images/clock.png" Stretch="None" />-->
                             		</Grid>
                             	</Border>
                             </avalonDock:LayoutAnchorable>
@@ -78,11 +133,8 @@
                     <avalonDock:LayoutDocumentPaneGroup>
                         <avalonDock:LayoutDocumentPane>
                             <avalonDock:LayoutDocument Title="Karta" >
-                                <Grid>
-                                	<Grid.Background>
-                                		<SolidColorBrush Color="#FF0A2C55"/>
-                                	</Grid.Background>
-                                    <view:Map x:Name="mapView"></view:Map>
+                                <Grid Background="#FF0A2C55">
+                                    <view:Map x:Name="mapView"/>
                                 </Grid>
                             </avalonDock:LayoutDocument>
                         </avalonDock:LayoutDocumentPane>
@@ -136,13 +188,16 @@
                                 	<Button Margin="0,68.16,8,117.404" HorizontalAlignment="Right" Width="54.485">
                                 		<Image Source="Images/arrow_right.png"/>
                                 	</Button>
-                                	<Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Background="#FF952D2D" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Click="Button_Click" /></Grid>
+                                	<Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Click="Button_Click" >
+                                		<Button.Background>
+                                			<SolidColorBrush Color="{DynamicResource Red1}"/>
+                                		</Button.Background>
+                                	</Button></Grid>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                         <avalonDock:LayoutAnchorablePane>
                             <avalonDock:LayoutAnchorable Title="Debugdata">
-                                <xctk:PropertyGrid x:Name="_propertyGrid"  SelectedObject="{Binding DebugDataDictionary, Converter={StaticResource PropertyGridVC}}">
-                                </xctk:PropertyGrid>
+                                <xctk:PropertyGrid x:Name="_propertyGrid"  SelectedObject="{Binding DebugDataDictionary, Converter={StaticResource PropertyGridVC}}"/>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>

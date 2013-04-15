@@ -66,7 +66,13 @@
 	      						</ColorAnimationUsingKeyFrames>
 	      					</Storyboard>
 	      				</VisualState>
-	      				<VisualState x:Name="Disabled"/>
+	      				<VisualState x:Name="Disabled">
+	      					<Storyboard>
+	      						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="rectangle_Copy">
+	      							<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+	      						</ObjectAnimationUsingKeyFrames>
+	      					</Storyboard>
+	      				</VisualState>
 	      			</VisualStateGroup>
 	      		</VisualStateManager.VisualStateGroups>
 	      		<Rectangle x:Name="rectangle">
@@ -82,10 +88,75 @@
 	        		HorizontalAlignment="Center"
 	        		VerticalAlignment="Center"
 	        		RecognizesAccessKey="True"/>
+	        	<Rectangle x:Name="rectangle_Copy" Fill="#8FBEBEBE" Visibility="Hidden"/>
 	      	</Grid>
 	        
 	      </ControlTemplate>
 	    </Setter.Value>
 	  </Setter>
 	</Style>
+	<Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+		<Setter Property="SnapsToDevicePixels" Value="true"/>
+		<Setter Property="OverridesDefaultStyle" Value="true"/>
+		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+		<Setter Property="Background">
+			<Setter.Value>
+				<SolidColorBrush Color="{StaticResource Blue1}"/>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Grid 
+						x:Name="Border"
+				>
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="CommonStates">
+								<VisualState x:Name="Normal"/>
+								<VisualState x:Name="MouseOver">
+									<Storyboard>
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="rectangle">
+											<EasingColorKeyFrame KeyTime="0" Value="#40FFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Pressed">
+									<Storyboard>
+										<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="rectangle">
+											<EasingColorKeyFrame KeyTime="0" Value="#66FFFFFF"/>
+										</ColorAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+								<VisualState x:Name="Disabled">
+									<Storyboard>
+										<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="rectangle_Copy1">
+											<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+										</ObjectAnimationUsingKeyFrames>
+									</Storyboard>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+						<Rectangle x:Name="rectangle_Copy" RadiusX="3" RadiusY="3" Fill="{TemplateBinding Background}"/>
+						<Rectangle x:Name="rectangle" RadiusX="3" RadiusY="3">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#01000000" Offset="0.443"/>
+									<GradientStop Color="#24FFFFFF" Offset="0.465"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<ContentPresenter 
+							Margin="2"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							RecognizesAccessKey="True"/>
+						<Rectangle x:Name="rectangle_Copy1" RadiusX="3" RadiusY="3" Fill="#8EBEBEBE" Visibility="Hidden"/>
+					</Grid>
+	        
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Color x:Key="Gray1">#FF959595</Color>
+	<Color x:Key="Red1">#FF952D2D</Color>
 </ResourceDictionary>

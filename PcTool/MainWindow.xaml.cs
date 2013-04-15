@@ -24,7 +24,7 @@ namespace PcTool
         {
             InitializeComponent();
             Terminal.RegisteredCommands.Add("map");
-            Terminal.RegisteredCommands.Add("write");
+            Terminal.RegisteredCommands.Add("update");
 
             ViewModel = ((MainViewModel)App.Current.Resources["ViewModel"]);
             ViewModel.Map.PositionUpdated += mapView.PositionUpdated;
@@ -58,8 +58,8 @@ namespace PcTool
                 case "map":
                     ViewModel.Map.UpdatePosition(int.Parse(e.Command.Args[0]), int.Parse(e.Command.Args[1]), bool.Parse(e.Command.Args[2]));
                     break;
-                case "write":
-                    PcTool.Logic.RobotConnector.SendByte(byte.Parse(e.Command.Args[0]));
+                case "update":
+                    ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>((PcTool.Logic.ControlParam)Enum.Parse(typeof(PcTool.Logic.ControlParam), e.Command.Args[0]), Byte.Parse(e.Command.Args[1])));
                     break;
                 default:
                     //((AurelienRibon.Ui.Terminal.Terminal)sender).InsertLineBeforePrompt("Invalid");
@@ -87,6 +87,35 @@ namespace PcTool
             }
 
             Terminal.Text += b + Environment.NewLine;
+        }
+
+        private void UpdateControlParam1(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.L1_x, Byte.Parse(ControlParam1.Text)));
+        }
+        private void UpdateControlParam2(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.L2_theta, Byte.Parse(ControlParam2.Text)));
+        }
+        private void UpdateControlParam3(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.L3_omega, Byte.Parse(ControlParam3.Text)));
+        }
+        private void UpdateControlParam4(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.L1_theta, Byte.Parse(ControlParam4.Text)));
+        }
+        private void UpdateControlParam5(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.L2_omega, Byte.Parse(ControlParam5.Text)));
+        }
+        private void UpdateControlParam6(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.PowerRightPair, Byte.Parse(ControlParam6.Text)));
+        }
+        private void UpdateControlParam7(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.PowerLeftPair, Byte.Parse(ControlParam7.Text)));
         }
     }
 }

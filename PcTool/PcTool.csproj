@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\accept.png" />
+    <Resource Include="Images\check.png" />
     <Resource Include="Images\clock.png" />
   </ItemGroup>
   <ItemGroup>
