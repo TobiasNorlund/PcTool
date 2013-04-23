@@ -86,7 +86,7 @@ namespace PcTool.ViewModel
             {
                 onHandshaked();
             }
-            else
+            else if(!IsConnected)
             {
                 onDisconnected();
             }
