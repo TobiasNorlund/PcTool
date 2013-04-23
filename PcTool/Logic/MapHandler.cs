@@ -21,6 +21,7 @@ namespace PcTool.Logic
         public delegate void WallDetectedDelegate(int x, int y, bool isX);
         public event PositionUpdatedDelegate PositionUpdated;
         public event WallDetectedDelegate WallDetected;
+        public event Action Cleared;
 
         private int[,] map { get; set; } // 16x16: 0 ej känd, 1 tillgänglig, 2 otillgänglig 
         private bool[,,] walls { get; set; } // 16x16: 3:e dim ([x,y,?]): Första pos är vägg längst y-axeln, andra är vägg längs x-axeln
@@ -56,6 +57,15 @@ namespace PcTool.Logic
                 if (WallDetected != null)
                     WallDetected(x - 8, y - 8, true);
             }
+        }
+
+        public void Clear()
+        {
+            map = new int[16, 16];
+            walls = new bool[16, 16, 2];
+
+            if (Cleared != null)
+                Cleared();
         }
 
     }

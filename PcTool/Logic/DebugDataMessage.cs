@@ -39,9 +39,18 @@ namespace PcTool.Logic
 
             // Skapa Dictionary från Param
             Data = new Dictionary<string, int>();
-            for (int i = 0; i < msg.Length; i+=2)
+            for (int i = 1; i < msg.Length; i+=2)
             {
-                Data.Add(DebugDataNamesLookup[msg[i]], msg[i + 1]);
+                if (msg[i] == 8)
+                {
+                    Data.Add("Gyro 1", msg[i + 1]);
+                    Data.Add("Gyro 2", msg[i + 2]);
+                    i++;
+                }
+                else
+                {
+                    Data.Add(DebugDataNamesLookup[msg[i]], msg[i + 1]);
+                }
             }
 
         }

@@ -18,7 +18,7 @@ namespace PcTool.Logic
 
             x = Param[0];
             y = Param[1];
-            isFree = Param[2] == 1;
+            isFree = Param[2] == 0;
         }
 
         public int x { get; set; }

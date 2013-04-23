@@ -30,9 +30,10 @@ namespace PcTool
             ViewModel.Map.PositionUpdated += mapView.PositionUpdated;
             ViewModel.Map.PositionUpdated += temp;
             ViewModel.Map.WallDetected += mapView.WallDetected;
+            ViewModel.Map.Cleared += () => mapView.Clear();
 
             // Skriv ut vilka bytes som kommer
-            //PcTool.Logic.RobotConnector.newByte += temp2;
+            PcTool.Logic.RobotConnector.newByte += temp2;
         }
 
         private MainViewModel ViewModel;
@@ -42,15 +43,15 @@ namespace PcTool
             dockingManager.Theme = new AvalonDock.Themes.VS2010Theme();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
             
-            var dict = new Dictionary<string, int>();
-            dict.Add("test1", 123);
-            dict.Add("test2", 234);
-            ViewModel.DebugDataDictionary = dict;
+        //    var dict = new Dictionary<string, int>();
+        //    dict.Add("test1", 123);
+        //    dict.Add("test2", 234);
+        //    ViewModel.DebugDataDictionary = dict;
             
-        }
+        //}
 
         private void Terminal_CommandEntered(object sender, AurelienRibon.Ui.Terminal.Terminal.CommandEventArgs e)
         {
@@ -62,7 +63,6 @@ namespace PcTool
                     ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>((PcTool.Logic.ControlParam)Enum.Parse(typeof(PcTool.Logic.ControlParam), e.Command.Args[0]), Byte.Parse(e.Command.Args[1])));
                     break;
                 default:
-                    //((AurelienRibon.Ui.Terminal.Terminal)sender).InsertLineBeforePrompt("Invalid");
                     break;
             }
             

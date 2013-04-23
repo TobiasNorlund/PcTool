@@ -16,6 +16,7 @@ namespace PcTool.ViewModel
             // Sätt upp kommandon
             ConnectCommand = new RelayCommand(() => RobotConnector.Connect(), isCommandsDisabled);
             DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect(), isCommandsEnabled);
+            EmergencyStopCommand = new RelayCommand(() => RobotConnector.SendEmergencyStop(), isCommandsEnabled);
             SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsHandshaked; });
             UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsHandshaked; });
 
@@ -23,29 +24,32 @@ namespace PcTool.ViewModel
             Map = new MapHandler();
 
             // Sätt upp Eventhanterare
-            RobotConnector.ConnectionChanged += delegate()
-            {
-                RaisePropertyChanged("IsConnected");
-                RaisePropertyChanged("IsHandshaked");
-            };
+            RobotConnector.ConnectionChanged += onConnectionChanged;
             RobotConnector.MapUpdate += Map.UpdatePosition;
+            RobotConnector.DebugDataUpdate += onDebugData;
         }
 
         public MapHandler Map { get; set; }
 
         #region Bindable Properties
 
+        /// <summary>
+        /// Returnerar om en anslutning till Firefly:en finns
+        /// </summary>
         public bool IsConnected
         {
             get { return RobotConnector.IsConnected; }
         }
 
+        /// <summary>
+        /// Returnerar om en lyckad handskakning har genomförts
+        /// </summary>
         public bool IsHandshaked
         {
-            get { return RobotConnector.IsConnected; }
+            get { return RobotConnector.IsHandshaked; }
         }
 
-        private IDictionary<string, int> _DebugDataDictionary;
+        private IDictionary<string, int> _DebugDataDictionary = new Dictionary<string, int>();
         public IDictionary<string, int> DebugDataDictionary { 
             get { return _DebugDataDictionary; }
             set
@@ -61,10 +65,57 @@ namespace PcTool.ViewModel
         public RelayCommand ConnectCommand { get; private set; }
         public RelayCommand DisconnectCommand { get; private set; }
 
+        public RelayCommand EmergencyStopCommand { get; private set; }
         public RelayCommand<string> SendManualCommand { get; private set; }
         public RelayCommand<KeyValuePair<ControlParam, byte>> UpdateControlParamCommand { get; private set; }
             
         #endregion
+
+        private void onConnectionChanged()
+        {
+            RaisePropertyChanged("IsConnected");
+            RaisePropertyChanged("IsHandshaked");
+
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+            EmergencyStopCommand.RaiseCanExecuteChanged();
+            SendManualCommand.RaiseCanExecuteChanged();
+            UpdateControlParamCommand.RaiseCanExecuteChanged();
+
+            if (IsHandshaked)
+            {
+                onHandshaked();
+            }
+            else
+            {
+                onDisconnected();
+            }
+        }
+
+        private void onHandshaked()
+        {
+            // Sätt första rutan som fri
+            Map.UpdatePosition(8, 8, true);
+        }
+
+        private void onDisconnected()
+        {
+            // Cleara hela kartan
+            Map.Clear();
+        }
+
+        private void onDebugData(Dictionary<string, int> data)
+        {
+            foreach (string d in data.Keys)
+            {
+                if(_DebugDataDictionary.Keys.Contains(d))
+                    _DebugDataDictionary[d] = data[d];
+                else
+                    _DebugDataDictionary.Add(d, data[d]);
+
+                RaisePropertyChanged("DebugDataDictionary");
+            }
+        }
 
         private bool isCommandsEnabled()
         {

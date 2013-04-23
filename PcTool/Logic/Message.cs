@@ -23,7 +23,8 @@ namespace PcTool.Logic
         public enum SendType
         {
             MANUAL_COMMAND = 1,
-            CHANGE_PARAM = 2
+            CHANGE_PARAM = 2,
+            EMERGENCY_STOP = 4
         }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace PcTool.Logic
         Rot90Left = 2,
         Rot45Right = 3,
         Rot45Left = 4,
-        VirtualTurnaround = 5,
+        VirtualTurn = 5,
         Testdrive = 6
     }
 
@@ -54,7 +54,7 @@ namespace PcTool.Logic
         // Handshake
         private static byte[] HANDSHAKE = new byte[2] {0xFF, 0xFF};
         private static int currentHandshakePos = 0;
-        private static bool isHandshaked = false;
+        public static bool isHandshaked = false;
 
         // Meddelandespecifika variabler
         private static byte[] messageBuffer;
@@ -81,6 +81,9 @@ namespace PcTool.Logic
 
         public static void Connect()
         {
+            if (port != null && port.IsOpen)
+                return;
+
             port = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
             port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             port.Open();
@@ -91,22 +94,17 @@ namespace PcTool.Logic
 
         public static void Disconnect()
         {
-            port.Close();
+            if(port.IsOpen)
+                port.Close();
 
             isHandshaked = false;
             currentHandshakePos = 0;
+            currentRemainingBytes = 0;
 
             if (ConnectionChanged != null)
                 ConnectionChanged();
         }
 
-        // TEMP
-        //public static void SendByte(byte b)
-        //{
-        //    byte[] bytes = new byte[1];
-        //    bytes[0] = b;
-        //    port.Write(bytes, 0, 1);
-        //}
 
         public static void SendCommand(ManualCommand command)
         {
@@ -120,13 +118,19 @@ namespace PcTool.Logic
             SendMessage(m);
         }
 
+        public static void SendEmergencyStop()
+        {
+            Message m = new Message(Message.SendType.EMERGENCY_STOP);
+            SendMessage(m);
+        }
+
 #region Privat funktionalitet
 
         private static void ParseMessage()
         {
-            for (int i = 0; i < messageBuffer.Length; i++)
-                if (newByte != null)
-                    newByte(messageBuffer[i]);
+            //for (int i = 0; i < messageBuffer.Length; i++)
+            //    if (newByte != null)
+                    //newByte(messageBuffer[i]);
 
             // Läs ut typen
             Message.RecieveType messageType = (Message.RecieveType)((messageBuffer[0] & 224)>>5);
@@ -180,7 +184,12 @@ namespace PcTool.Logic
                     {
                         currentHandshakePos++;
                         if (currentHandshakePos >= HANDSHAKE.Length)
+                        {
                             isHandshaked = true;
+                            if (ConnectionChanged != null)
+                                ConnectionChanged();
+                        }
+                        
                     }
                     else
                     {
