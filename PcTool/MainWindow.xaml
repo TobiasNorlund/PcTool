@@ -197,8 +197,15 @@
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                         <avalonDock:LayoutAnchorablePane>
-                            <avalonDock:LayoutAnchorable Title="Debugdata">
-                                <xctk:PropertyGrid x:Name="_propertyGrid"  SelectedObject="{Binding DebugDataDictionary, Converter={StaticResource PropertyGridVC}}"/>
+                            <avalonDock:LayoutAnchorable Title="Data">
+                                <ListView ItemsSource="{Binding DebugDataDictionary}">
+                                	<ListView.View>
+                                		<GridView>
+                                			<GridViewColumn Header="ID" DisplayMemberBinding="{Binding Key}" Width="100"></GridViewColumn>
+											<GridViewColumn Header="Värde" Width="120" DisplayMemberBinding="{Binding Value}"></GridViewColumn>
+										</GridView>                       	
+									</ListView.View>                        
+								</ListView>
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>

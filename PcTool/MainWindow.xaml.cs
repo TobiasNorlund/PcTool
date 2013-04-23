@@ -45,12 +45,19 @@ namespace PcTool
 
         //private void Button_Click(object sender, RoutedEventArgs e)
         //{
-            
+        //    var r = new Random();
         //    var dict = new Dictionary<string, int>();
-        //    dict.Add("test1", 123);
-        //    dict.Add("test2", 234);
+        //    dict.Add("test1", r.Next(255));
+        //    dict.Add("test2", r.Next(255));
+        //    dict.Add("test3", r.Next(255));
+        //    dict.Add("test4", r.Next(255));
+        //    dict.Add("test5", r.Next(255));
+        //    dict.Add("test6", r.Next(255));
+        //    dict.Add("test7", r.Next(255));
+        //    dict.Add("test8", r.Next(255));
+        //    dict.Add("test9", r.Next(255));
         //    ViewModel.DebugDataDictionary = dict;
-            
+
         //}
 
         private void Terminal_CommandEntered(object sender, AurelienRibon.Ui.Terminal.Terminal.CommandEventArgs e)
@@ -117,5 +124,6 @@ namespace PcTool
         {
             ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.PowerLeftPair, Byte.Parse(ControlParam7.Text)));
         }
+
     }
 }
