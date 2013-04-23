@@ -84,7 +84,9 @@ namespace PcTool.Logic
             if (port != null && port.IsOpen)
                 return;
 
-            port = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
+            port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.BaudRate, Parity.None, 8, StopBits.One);
+            port.ReadTimeout = 10000;
+            port.WriteTimeout = 10000;
             port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
             port.Open();
             
@@ -126,6 +128,9 @@ namespace PcTool.Logic
 
 #region Privat funktionalitet
 
+        /// <summary>
+        /// Parsar ett helt mottaget meddelande och reser rätt event
+        /// </summary>
         private static void ParseMessage()
         {
             //for (int i = 0; i < messageBuffer.Length; i++)
@@ -154,6 +159,10 @@ namespace PcTool.Logic
             }
         }
 
+        /// <summary>
+        /// Skickar iväg ett meddelande via COM-porten
+        /// </summary>
+        /// <param name="message"></param>
         private static void SendMessage(Message message)
         {
             byte[] bytes = message.GetBytes();
@@ -171,6 +180,9 @@ namespace PcTool.Logic
         /// <param name="e"></param>
         private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
+            if (!IsConnected)
+                return;
+
             // Test för att kolla vilka bytes som kommer
             //while (port.BytesToRead > 0)
             //    if (newByte != null)

@@ -6,7 +6,6 @@
         <ResourceDictionary Source="Styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <vm:MainViewModel x:Key="ViewModel"></vm:MainViewModel>
-      <View:DictionaryPropertyGridValueConverter x:Key="PropertyGridVC"></View:DictionaryPropertyGridValueConverter>
       <!--<vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />-->
     </ResourceDictionary>
   </Application.Resources>

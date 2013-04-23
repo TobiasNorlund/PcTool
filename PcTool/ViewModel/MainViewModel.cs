@@ -14,8 +14,8 @@ namespace PcTool.ViewModel
         public MainViewModel()
         {
             // Sätt upp kommandon
-            ConnectCommand = new RelayCommand(() => RobotConnector.Connect(), isCommandsDisabled);
-            DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect(), isCommandsEnabled);
+            ConnectCommand = new RelayCommand(() => RobotConnector.Connect(), delegate() { return !RobotConnector.IsConnected; });
+            DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect(), delegate() { return RobotConnector.IsConnected; });
             EmergencyStopCommand = new RelayCommand(() => RobotConnector.SendEmergencyStop(), isCommandsEnabled);
             SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsHandshaked; });
             UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsHandshaked; });
