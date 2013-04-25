@@ -52,8 +52,8 @@ namespace PcTool.Logic
         private static SerialPort port;
 
         // Handshake
-        private static byte[] HANDSHAKE = new byte[2] {0xFF, 0xFF};
-        private static int currentHandshakePos = 0;
+        //private static byte[] HANDSHAKE = new byte[1] {0xFF};
+        private static int currentHandshakeState = 0;
         public static bool isHandshaked = false;
 
         // Meddelandespecifika variabler
@@ -100,7 +100,7 @@ namespace PcTool.Logic
                 port.Close();
 
             isHandshaked = false;
-            currentHandshakePos = 0;
+            currentHandshakeState = 0;
             currentRemainingBytes = 0;
 
             if (ConnectionChanged != null)
@@ -191,13 +191,44 @@ namespace PcTool.Logic
             // Läs av handshake om det inte redan gjorts
             if (!isHandshaked)
             {
-                while (!isHandshaked && port.BytesToRead > 0){
+                if (port.BytesToRead > 0)
+                {
+                    byte[] b = new byte[1];
+                    switch (currentHandshakeState)
+                    {
+                        case 0:
+                            port.Read(b, 0, 1);
+                            if (b[0] == 1)
+                            {
+                                port.ReadExisting(); // Töm bufferten
+                                port.Write(new byte[1] { 0x2 }, 0, 1);
+                                currentHandshakeState = 1;
+                            }
+                            break;
+                        case 1:
+                            port.Read(b, 0, 1);
+                            if (b[0] == 1)
+                            {
+                                currentHandshakeState = 0;
+                            }
+                            else if (b[0] == 3)
+                            {
+                                // Handshake OK
+                                isHandshaked = true;
+                                if (ConnectionChanged != null)
+                                    ConnectionChanged();
+                            }
+                            break;
+                    }
+                }
+                /*while (!isHandshaked && port.BytesToRead > 0){
                     if (port.ReadByte() == HANDSHAKE[currentHandshakePos])
                     {
                         currentHandshakePos++;
                         if (currentHandshakePos >= HANDSHAKE.Length)
                         {
                             isHandshaked = true;
+
                             if (ConnectionChanged != null)
                                 ConnectionChanged();
                         }
@@ -208,10 +239,13 @@ namespace PcTool.Logic
                         // En felaktig byte var mottagen, börja om
                         currentHandshakePos = 0;
                     }
-                }
+                }*/
                 if (!isHandshaked)
                     return;
             }
+
+            if (port.BytesToRead == 0)
+                return;
 
             // Om det är början på ett nytt meddelande
             if (currentRemainingBytes == 0)

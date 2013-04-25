@@ -198,7 +198,7 @@
                         </avalonDock:LayoutAnchorablePane>
                         <avalonDock:LayoutAnchorablePane>
                             <avalonDock:LayoutAnchorable Title="Data">
-                                <ListView ItemsSource="{Binding DebugDataDictionary}">
+                                <ListView ItemsSource="{Binding DebugDataDictionary, UpdateSourceTrigger=PropertyChanged}">
                                 	<ListView.View>
                                 		<GridView>
                                 			<GridViewColumn Header="ID" DisplayMemberBinding="{Binding Key}" Width="100"></GridViewColumn>

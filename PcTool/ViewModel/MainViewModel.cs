@@ -27,6 +27,7 @@ namespace PcTool.ViewModel
             RobotConnector.ConnectionChanged += onConnectionChanged;
             RobotConnector.MapUpdate += Map.UpdatePosition;
             RobotConnector.DebugDataUpdate += onDebugData;
+
         }
 
         public MapHandler Map { get; set; }
@@ -108,13 +109,26 @@ namespace PcTool.ViewModel
         {
             foreach (string d in data.Keys)
             {
-                if(_DebugDataDictionary.Keys.Contains(d))
+                if (_DebugDataDictionary.Keys.Contains(d))
                     _DebugDataDictionary[d] = data[d];
                 else
                     _DebugDataDictionary.Add(d, data[d]);
-
-                RaisePropertyChanged("DebugDataDictionary");
             }
+            //var r = new Random();
+            ////var dict = new Dictionary<string, int>();
+            //_DebugDataDictionary["test1"] =  r.Next(255);
+            //_DebugDataDictionary["test2"] = r.Next(255);
+            //_DebugDataDictionary["test3"] = r.Next(255);
+            //_DebugDataDictionary["test4"] = r.Next(255);
+            //_DebugDataDictionary["test5"] = r.Next(255);
+            //_DebugDataDictionary["test6"] = r.Next(255);
+            //_DebugDataDictionary["test7"] = r.Next(255);
+            //_DebugDataDictionary["test8"] = r.Next(255);
+            //_DebugDataDictionary["test9"] = r.Next(255);
+
+            DebugDataDictionary = new Dictionary<string, int>(DebugDataDictionary);
+
+            //RaisePropertyChanged("DebugDataDictionary");
         }
 
         private bool isCommandsEnabled()
