@@ -85,13 +85,21 @@ namespace PcTool.Logic
                 return;
 
             port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.BaudRate, Parity.None, 8, StopBits.One);
-            port.ReadTimeout = 10000;
-            port.WriteTimeout = 10000;
+            port.ReadTimeout = 20000;
+            port.WriteTimeout = 20000;
             port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            port.Open();
+            try
+            {
+                port.Open();
+
+                if (ConnectionChanged != null)
+                    ConnectionChanged();
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show("Fel: " + e.ToString());
+            }
             
-            if (ConnectionChanged != null)
-                ConnectionChanged();
         }
 
         public static void Disconnect()
@@ -139,13 +147,16 @@ namespace PcTool.Logic
 
             // Läs ut typen
             Message.RecieveType messageType = (Message.RecieveType)((messageBuffer[0] & 224)>>5);
-
+            uint len = (uint)(messageBuffer[0] & 31);
             switch (messageType)
             {
                 case Message.RecieveType.MAP_DATA:
-                    MapMessage mapmessage = new MapMessage(messageBuffer);
-                    if (MapUpdate != null)
-                        MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
+                    if (len == 3)
+                    {
+                        MapMessage mapmessage = new MapMessage(messageBuffer);
+                        if (MapUpdate != null)
+                            MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
+                    }
                     break;
                 case Message.RecieveType.DEBUG_DATA:
                     DebugDataMessage ddmessage = new DebugDataMessage(messageBuffer);
