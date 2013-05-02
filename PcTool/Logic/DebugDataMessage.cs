@@ -59,7 +59,15 @@ namespace PcTool.Logic
                             i++;
                             break;
                         case 12:
-                            Data.Add(DebugDataNamesLookup[msg[i]], (char)msg[i + 1] / 2);
+                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] / 2);
+                            break;
+                        case 13:
+                            Int16 max = BitConverter.ToInt16(new byte[2] {msg[i + 2], msg[i + 1]},0);// little endian på pc:n big endian på avr, dvs reverse bitt order
+                            Data.Add("max", max);
+                            i++;
+                            break;
+                        case 14:
+                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1]);
                             break;
                         default:
                             if (DebugDataNamesLookup.Keys.Contains(msg[i]))
