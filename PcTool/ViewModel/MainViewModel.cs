@@ -114,21 +114,8 @@ namespace PcTool.ViewModel
                 else
                     _DebugDataDictionary.Add(d, data[d]);
             }
-            //var r = new Random();
-            ////var dict = new Dictionary<string, int>();
-            //_DebugDataDictionary["test1"] =  r.Next(255);
-            //_DebugDataDictionary["test2"] = r.Next(255);
-            //_DebugDataDictionary["test3"] = r.Next(255);
-            //_DebugDataDictionary["test4"] = r.Next(255);
-            //_DebugDataDictionary["test5"] = r.Next(255);
-            //_DebugDataDictionary["test6"] = r.Next(255);
-            //_DebugDataDictionary["test7"] = r.Next(255);
-            //_DebugDataDictionary["test8"] = r.Next(255);
-            //_DebugDataDictionary["test9"] = r.Next(255);
 
             DebugDataDictionary = new Dictionary<string, int>(DebugDataDictionary);
-
-            //RaisePropertyChanged("DebugDataDictionary");
         }
 
         private bool isCommandsEnabled()

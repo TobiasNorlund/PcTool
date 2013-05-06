@@ -42,6 +42,9 @@
                         </avalonDock:LayoutAnchorablePane>
                         <avalonDock:LayoutAnchorablePane DockHeight="2*">
                             <avalonDock:LayoutAnchorable Title="Rådata">
+                                <TextBox x:Name="RawDataTextBox"></TextBox>
+                            </avalonDock:LayoutAnchorable>
+							<avalonDock:LayoutAnchorable Title="Kommandotolk">
                                 <terminal:Terminal FontFamily="Consolas" FontSize="10" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" x:Name="Terminal" CommandEntered="Terminal_CommandEntered" />
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
@@ -130,7 +133,7 @@
                             </avalonDock:LayoutAnchorable>
                         </avalonDock:LayoutAnchorablePane>
                     </avalonDock:LayoutAnchorablePaneGroup>
-                    <avalonDock:LayoutDocumentPaneGroup>
+                    <avalonDock:LayoutDocumentPaneGroup Orientation="Vertical">
                         <avalonDock:LayoutDocumentPane>
                             <avalonDock:LayoutDocument Title="Karta" >
                                 <Grid Background="#FF0A2C55">
@@ -138,6 +141,8 @@
                                 </Grid>
                             </avalonDock:LayoutDocument>
                         </avalonDock:LayoutDocumentPane>
+						
+						<avalonDock:LayoutDocumentPane x:Name="PlotContainer" DockHeight="0.5*" />
                     </avalonDock:LayoutDocumentPaneGroup>
                     <avalonDock:LayoutAnchorablePaneGroup DockWidth="230" Orientation="Vertical">
                         <avalonDock:LayoutAnchorablePane DockHeight="0.7*">
@@ -189,7 +194,7 @@
                                         <Image Source="Images/arrow_right.png"/>
                                     </Button>
                                     <Button Margin="0,129,8,77" HorizontalAlignment="Right" Width="54.485" Command="{Binding SendManualCommand}" CommandParameter="Testdrive" Content="T" FontFamily="Arial Black" FontSize="25" Foreground="White" VerticalAlignment="Bottom"></Button>
-                                    <Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Command="{Binding EmergencyStopCommand}" >
+                                    <Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White"  Click="Button_Click" ><!--Command="{Binding EmergencyStopCommand}"-->
                                 		<Button.Background>
                                 			<SolidColorBrush Color="{DynamicResource Red1}"/>
                                 		</Button.Background>
@@ -201,8 +206,20 @@
                                 <ListView ItemsSource="{Binding DebugDataDictionary, UpdateSourceTrigger=PropertyChanged}">
                                 	<ListView.View>
                                 		<GridView>
-                                			<GridViewColumn Header="ID" DisplayMemberBinding="{Binding Key}" Width="100"></GridViewColumn>
-											<GridViewColumn Header="Värde" Width="120" DisplayMemberBinding="{Binding Value}"></GridViewColumn>
+                                			<GridViewColumn Header="ID" DisplayMemberBinding="{Binding Key}" Width="80"></GridViewColumn>
+											<GridViewColumn Header="Värde" Width="100" DisplayMemberBinding="{Binding Value}"></GridViewColumn>
+											<GridViewColumn Header="Plot" Width="40">
+												<GridViewColumn.CellTemplate>
+													<DataTemplate>
+														<Button Style="{DynamicResource ButtonStyle1}" Tag="{Binding Key}" Width="15" Height="15" Click="PlotDebugData">
+															<Button.Background>
+																<SolidColorBrush Color="{DynamicResource Gray1}"/>
+															</Button.Background>
+														</Button>
+													</DataTemplate>
+												</GridViewColumn.CellTemplate>
+											</GridViewColumn>
+
 										</GridView>                       	
 									</ListView.View>                        
 								</ListView>

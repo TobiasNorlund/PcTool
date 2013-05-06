@@ -82,6 +82,10 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFVisifire.Charts">
+      <HintPath>..\packages\Visifire\WPFVisifire.Charts.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -97,6 +101,7 @@
     <Compile Include="View\Map.xaml.cs">
       <DependentUpon>Map.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PlotAnchorable.cs" />
     <Compile Include="View\Point3DAnimationUsingPath.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
