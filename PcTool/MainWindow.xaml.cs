@@ -37,15 +37,15 @@ namespace PcTool
             // Skriv ut vilka bytes som kommer
             PcTool.Logic.RobotConnector.newByte += temp2;
 
-            var t = new System.Timers.Timer(50);
-            t.Elapsed += delegate(object s, System.Timers.ElapsedEventArgs e)
-                         {
-                             var r = new Random();
-                             if(dict.ContainsKey("test1"))
-                                dict["test1"] = r.Next(255);
-                             UpdatePlot(dict);
-                         };
-            t.Start();
+            //var t = new System.Timers.Timer(50);
+            //t.Elapsed += delegate(object s, System.Timers.ElapsedEventArgs e)
+            //             {
+            //                 var r = new Random();
+            //                 if (ViewModel.DebugDataDictionary.ContainsKey("test1"))
+            //                     ViewModel.DebugDataDictionary["test1"] = r.Next(255);
+            //                 //UpdatePlot(dict);
+            //             };
+            //t.Start();
         }
 
         private MainViewModel ViewModel;
@@ -69,7 +69,7 @@ namespace PcTool
             dict.Add("test7", r.Next(255));
             dict.Add("test8", r.Next(255));
             dict.Add("test9", r.Next(255));
-            ViewModel.DebugDataDictionary = dict;
+            //ViewModel.DebugDataDictionary = dict;
 
         }
 

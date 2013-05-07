@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using PcTool.Logic;
 using GalaSoft.MvvmLight.Command;
+using System.Collections.ObjectModel;
 
 namespace PcTool.ViewModel
 {
@@ -50,8 +51,9 @@ namespace PcTool.ViewModel
             get { return RobotConnector.IsHandshaked; }
         }
 
-        private IDictionary<string, int> _DebugDataDictionary = new Dictionary<string, int>();
-        public IDictionary<string, int> DebugDataDictionary { 
+        private ObservableDictionary<string, int> _DebugDataDictionary = new ObservableDictionary<string, int>();
+        public ObservableDictionary<string, int> DebugDataDictionary
+        { 
             get { return _DebugDataDictionary; }
             set
             {   _DebugDataDictionary = value;
@@ -107,6 +109,12 @@ namespace PcTool.ViewModel
 
         private void onDebugData(Dictionary<string, int> data)
         {
+            //if (!App.Current.Dispatcher.CheckAccess())
+            //{
+            //    App.Current.Dispatcher.Invoke(new Action(() => onDebugData(data)), null);
+            //    return;
+            //}
+
             foreach (string d in data.Keys)
             {
                 if (_DebugDataDictionary.Keys.Contains(d))
@@ -114,8 +122,8 @@ namespace PcTool.ViewModel
                 else
                     _DebugDataDictionary.Add(d, data[d]);
             }
-
-            DebugDataDictionary = new Dictionary<string, int>(DebugDataDictionary);
+            //RaisePropertyChanged("DebugDataDictionary");
+            DebugDataDictionary = new ObservableDictionary<string, int>(DebugDataDictionary);
         }
 
         private bool isCommandsEnabled()

@@ -96,6 +96,7 @@
     <Compile Include="Logic\MapHandler.cs" />
     <Compile Include="Logic\MapMessage.cs" />
     <Compile Include="Logic\Message.cs" />
+    <Compile Include="Logic\ObservableDictionary.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\LookBackConverter.cs" />
     <Compile Include="View\Map.xaml.cs">
