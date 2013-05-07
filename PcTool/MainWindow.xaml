@@ -194,7 +194,7 @@
                                         <Image Source="Images/arrow_right.png"/>
                                     </Button>
                                     <Button Margin="0,129,8,77" HorizontalAlignment="Right" Width="54.485" Command="{Binding SendManualCommand}" CommandParameter="Testdrive" Content="T" FontFamily="Arial Black" FontSize="25" Foreground="White" VerticalAlignment="Bottom"></Button>
-                                    <Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Click="Button_Click" >
+                                    <Button Height="63.273" Margin="8,0,8,7.558" VerticalAlignment="Bottom" Content="S T O P" FontFamily="Arial Black" FontSize="40" Foreground="White" Command="{Binding EmergencyStopCommand}" >
                                         <!-- Click="Button_Click"-->
                                 		<Button.Background>
                                 			<SolidColorBrush Color="{DynamicResource Red1}"/>

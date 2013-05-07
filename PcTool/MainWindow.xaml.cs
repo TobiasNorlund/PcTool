@@ -56,22 +56,22 @@ namespace PcTool
             dockingManager.Theme = new AvalonDock.Themes.VS2010Theme();
         }
 
-        private Dictionary<string, int> dict = new Dictionary<string, int>();
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var r = new Random();
-            dict.Add("test1", r.Next(255));
-            dict.Add("test2", r.Next(255));
-            dict.Add("test3", r.Next(255));
-            dict.Add("test4", r.Next(255));
-            dict.Add("test5", r.Next(255));
-            dict.Add("test6", r.Next(255));
-            dict.Add("test7", r.Next(255));
-            dict.Add("test8", r.Next(255));
-            dict.Add("test9", r.Next(255));
-            //ViewModel.DebugDataDictionary = dict;
+        //private Dictionary<string, int> dict = new Dictionary<string, int>();
+        //private void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var r = new Random();
+        //    dict.Add("test1", r.Next(255));
+        //    dict.Add("test2", r.Next(255));
+        //    dict.Add("test3", r.Next(255));
+        //    dict.Add("test4", r.Next(255));
+        //    dict.Add("test5", r.Next(255));
+        //    dict.Add("test6", r.Next(255));
+        //    dict.Add("test7", r.Next(255));
+        //    dict.Add("test8", r.Next(255));
+        //    dict.Add("test9", r.Next(255));
+        //    //ViewModel.DebugDataDictionary = dict;
 
-        }
+        //}
 
         private void Terminal_CommandEntered(object sender, AurelienRibon.Ui.Terminal.Terminal.CommandEventArgs e)
         {

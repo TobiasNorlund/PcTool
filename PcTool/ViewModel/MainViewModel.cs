@@ -51,7 +51,7 @@ namespace PcTool.ViewModel
             get { return RobotConnector.IsHandshaked; }
         }
 
-        private ObservableDictionary<string, int> _DebugDataDictionary = new ObservableDictionary<string, int>();
+        private ObservableDictionary<string, int> _DebugDataDictionary;
         public ObservableDictionary<string, int> DebugDataDictionary
         { 
             get { return _DebugDataDictionary; }
@@ -99,6 +99,9 @@ namespace PcTool.ViewModel
         {
             // Sätt första rutan som fri
             Map.UpdatePosition(8, 8, true);
+
+            // Cleara debugdata
+            DebugDataDictionary = new ObservableDictionary<string, int>();
         }
 
         private void onDisconnected()
@@ -109,11 +112,11 @@ namespace PcTool.ViewModel
 
         private void onDebugData(Dictionary<string, int> data)
         {
-            //if (!App.Current.Dispatcher.CheckAccess())
-            //{
-            //    App.Current.Dispatcher.Invoke(new Action(() => onDebugData(data)), null);
-            //    return;
-            //}
+            if (!App.Current.Dispatcher.CheckAccess())
+            {
+                App.Current.Dispatcher.Invoke(new Action(() => onDebugData(data)), null);
+                return;
+            }
 
             foreach (string d in data.Keys)
             {
@@ -123,7 +126,7 @@ namespace PcTool.ViewModel
                     _DebugDataDictionary.Add(d, data[d]);
             }
             //RaisePropertyChanged("DebugDataDictionary");
-            DebugDataDictionary = new ObservableDictionary<string, int>(DebugDataDictionary);
+            //DebugDataDictionary = new ObservableDictionary<string, int>(DebugDataDictionary);
         }
 
         private bool isCommandsEnabled()
