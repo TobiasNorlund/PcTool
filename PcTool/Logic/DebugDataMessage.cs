@@ -25,7 +25,7 @@ namespace PcTool.Logic
             { 9, "Rot. höger"},
             { 10, "Rot. vänster"},
             { 12, "x"},
-            { 13, "max"},
+            { 13, "y"},
             {14, "theta"}
         };
 
@@ -59,12 +59,8 @@ namespace PcTool.Logic
                             i++;
                             break;
                         case 12:
-                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] / 2);
-                            break;
                         case 13:
-                            Int16 max = BitConverter.ToInt16(new byte[2] {msg[i + 2], msg[i + 1]},0);// little endian på pc:n big endian på avr, dvs reverse bitt order
-                            Data.Add("max", max);
-                            i++;
+                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] / 2);
                             break;
                         case 14:
                             Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1]);

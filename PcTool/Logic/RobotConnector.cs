@@ -176,8 +176,15 @@ namespace PcTool.Logic
         /// <param name="message"></param>
         private static void SendMessage(Message message)
         {
-            byte[] bytes = message.GetBytes();
-            port.Write(bytes, 0, bytes.Length);
+            try
+            {
+                byte[] bytes = message.GetBytes();
+                port.Write(bytes, 0, bytes.Length);
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show("Fel vid skickning av meddelande: \n\n" + e.Message);
+            }
         }
 
 #endregion

@@ -27,7 +27,7 @@ namespace PcTool
             Terminal.RegisteredCommands.Add("update");
 
             ViewModel = ((MainViewModel)App.Current.Resources["ViewModel"]);
-            ViewModel.Map.PositionUpdated += mapView.PositionUpdated;
+                ViewModel.Map.PositionUpdated += mapView.PositionUpdated;
             ViewModel.Map.PositionUpdated += temp;
             ViewModel.Map.WallDetected += mapView.WallDetected;
             ViewModel.Map.Cleared += () => mapView.Clear();
