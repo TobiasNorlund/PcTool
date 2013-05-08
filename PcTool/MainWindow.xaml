@@ -8,7 +8,7 @@
         xmlns:terminal="clr-namespace:AurelienRibon.Ui.Terminal;assembly=AurelienRibon.Ui.Terminal"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:Custom="http://www.galasoft.ch/mvvmlight" mc:Ignorable="d" x:Class="PcTool.MainWindow"
         DataContext="{StaticResource ViewModel}"
-        Title="MainWindow" Height="700" Width="1000">
+        Title="MainWindow" Height="700" Width="1000" Icon="/PcTool;component/20130508_161519_256px.ico">
     <Grid>
         <avalonDock:DockingManager x:Name="dockingManager" Loaded="dockingManager_Loaded">
             <avalonDock:LayoutRoot>

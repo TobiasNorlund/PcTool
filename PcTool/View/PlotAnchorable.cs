@@ -35,8 +35,15 @@ namespace PcTool.View
         {
             if (serie.DataPoints.Count > 100)
                 serie.DataPoints.RemoveAt(0);
-            serie.DataPoints.Add(new DataPoint() { YValue = data[ID], XValue = i });
-            i++;
+            try
+            {
+                serie.DataPoints.Add(new DataPoint() { YValue = data[ID], XValue = i });
+                i++;
+            }
+            catch(Exception)
+            {
+
+            }
 
         }
     }

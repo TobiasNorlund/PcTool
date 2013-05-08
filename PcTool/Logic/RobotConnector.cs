@@ -154,8 +154,10 @@ namespace PcTool.Logic
                     if (len == 3)
                     {
                         MapMessage mapmessage = new MapMessage(messageBuffer);
-                        if (MapUpdate != null)
+                        if (MapUpdate != null && mapmessage.x < 16 && mapmessage.y < 16)
+                        {
                             MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
+                        }
                     }
                     break;
                 case Message.RecieveType.DEBUG_DATA:
@@ -200,16 +202,16 @@ namespace PcTool.Logic
         {
             if (!IsConnected)
                 return;
-
+            int bytesToRead = port.BytesToRead;
             // Test för att kolla vilka bytes som kommer
-            //while (port.BytesToRead > 0)
+            //while (bytesToRead > 0)
             //    if (newByte != null)
             //        newByte((byte)port.ReadByte());
             
             // Läs av handshake om det inte redan gjorts
             if (!isHandshaked)
             {
-                if (port.BytesToRead > 0)
+                if (bytesToRead > 0)
                 {
                     byte[] b = new byte[1];
                     switch (currentHandshakeState)
@@ -239,7 +241,7 @@ namespace PcTool.Logic
                             break;
                     }
                 }
-                /*while (!isHandshaked && port.BytesToRead > 0){
+                /*while (!isHandshaked && bytesToRead > 0){
                     if (port.ReadByte() == HANDSHAKE[currentHandshakePos])
                     {
                         currentHandshakePos++;
@@ -262,7 +264,7 @@ namespace PcTool.Logic
                     return;
             }
 
-            if (port.BytesToRead == 0)
+            if (bytesToRead == 0)
                 return;
 
             // Om det är början på ett nytt meddelande
@@ -272,26 +274,27 @@ namespace PcTool.Logic
                 int length = (int)(firstByte & 31);
                 messageBuffer = new byte[length + 1];
                 messageBuffer[0] = firstByte;
-                currentRemainingBytes = (port.BytesToRead < length)?length - port.BytesToRead:0;
-                port.Read(messageBuffer, 1, (port.BytesToRead < length) ? port.BytesToRead : length);
+
+                currentRemainingBytes = (bytesToRead < length) ? (length - bytesToRead) : 0;
+                port.Read(messageBuffer, 1, (bytesToRead < length) ? bytesToRead : length);
 
                 // Om vi har ett helt meddelande
                 if(currentRemainingBytes==0)
                     ParseMessage();
                 
                 // Om det finns bytes kvar i buffern, kör funktionen igen
-                if (port.BytesToRead > 0)
+                if (bytesToRead > 0)
                     DataReceivedHandler(sender, e);
                 
             }
             else
             {
                 // Om buffern innehåller mindre eller lika många bytes som saknas för meddelandet
-                if (port.BytesToRead <= currentRemainingBytes)
+                if (bytesToRead <= currentRemainingBytes)
                 {
-                    int bytesToRead = port.BytesToRead;
-                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, port.BytesToRead);
-                    currentRemainingBytes -= bytesToRead;
+                    int bytesToReadTemp = bytesToRead;
+                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, bytesToRead);
+                    currentRemainingBytes -= bytesToReadTemp;
 
                     // Om hela meddelandet nu är hämtat
                     if (currentRemainingBytes == 0)
@@ -300,8 +303,8 @@ namespace PcTool.Logic
                 else
                 {
                     // Om buffern innehåller FLER bytes av vad som behövs till meddelandet
-                    int bytesToRead = currentRemainingBytes;
-                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, bytesToRead);
+                    int bytesToReadCurrent = currentRemainingBytes;
+                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, bytesToReadCurrent);
                     currentRemainingBytes = 0;
 
                     // Hela meddelandet är nu hämtat
