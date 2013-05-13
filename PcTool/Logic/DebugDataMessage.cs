@@ -26,7 +26,7 @@ namespace PcTool.Logic
             { 10, "Rot. vänster"},
             { 12, "x"},
             { 13, "y"},
-            {14, "theta"},
+            {14, "theta"}
         };
 
         #endregion

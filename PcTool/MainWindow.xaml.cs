@@ -171,5 +171,10 @@ namespace PcTool
 
         }
 
+        private void mapView_ClearMap(object sender, EventArgs e)
+        {
+            ViewModel.ClearMapCommand.Execute(null);
+        }
+
     }
 }

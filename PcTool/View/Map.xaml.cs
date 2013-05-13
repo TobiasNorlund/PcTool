@@ -27,6 +27,8 @@ namespace PcTool.View
             initViewMap();
         }
 
+        public event EventHandler ClearMap;
+
         private MaterialGroup availableBlockMaterial = new MaterialGroup();
         private MaterialGroup unavailableBlockMaterial = new MaterialGroup();
         private Model3DGroup viewMap = new Model3DGroup();
@@ -114,6 +116,12 @@ namespace PcTool.View
         public void Clear()
         {
             viewMap.Children.Clear();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            if (ClearMap != null)
+                ClearMap(sender, e);
         }
     }
 }

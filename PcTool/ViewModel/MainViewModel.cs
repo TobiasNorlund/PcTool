@@ -20,6 +20,12 @@ namespace PcTool.ViewModel
             EmergencyStopCommand = new RelayCommand(() => RobotConnector.SendEmergencyStop(), isCommandsEnabled);
             SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsConnected; });
             UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsConnected; });
+            ClearMapCommand = new RelayCommand(delegate()
+            {
+                Map.Clear();
+                Map.UpdatePosition(8, 8, true);
+            });
+
 
             // Skapa karthantere
             Map = new MapHandler();
@@ -71,6 +77,8 @@ namespace PcTool.ViewModel
         public RelayCommand EmergencyStopCommand { get; private set; }
         public RelayCommand<string> SendManualCommand { get; private set; }
         public RelayCommand<KeyValuePair<ControlParam, byte>> UpdateControlParamCommand { get; private set; }
+
+        public RelayCommand ClearMapCommand { get; private set; }
             
         #endregion
 

@@ -137,7 +137,7 @@
                         <avalonDock:LayoutDocumentPane>
                             <avalonDock:LayoutDocument Title="Karta" >
                                 <Grid Background="#FF0A2C55">
-                                    <view:Map x:Name="mapView"/>
+                                    <view:Map x:Name="mapView" ClearMap="mapView_ClearMap" />
                                 </Grid>
                             </avalonDock:LayoutDocument>
                         </avalonDock:LayoutDocumentPane>
