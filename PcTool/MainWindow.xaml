@@ -34,8 +34,8 @@
                                         <TextBlock x:Name="textBlock1" Text="{Binding IsConnected}" VerticalAlignment="Top" />
                                     </StackPanel>
                                     <StackPanel HorizontalAlignment="Left" Margin="5,77,0,0" x:Name="stackPanel2" Orientation="Horizontal" VerticalAlignment="Top" Width="200">
-                                        <TextBlock Text="Handskakning: " FontWeight="Bold" />
-                                        <TextBlock x:Name="textBlock2" Text="{Binding IsHandshaked}" VerticalAlignment="Top" />
+                                        <TextBlock Text="Handskakning: " FontWeight="Bold" Visibility="Collapsed" />
+                                        <!--<TextBlock x:Name="textBlock2" Text="{Binding IsHandshaked}" VerticalAlignment="Top" Visibility="Collapsed" />-->
                                     </StackPanel>
                                 </Grid>
                             </avalonDock:LayoutAnchorable>

@@ -5,6 +5,8 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using System.IO.Ports;
+using System.Threading;
+using System.ComponentModel;
 
 namespace PcTool.Logic
 {
@@ -50,14 +52,15 @@ namespace PcTool.Logic
         public static event TempHandler newByte;
 
         private static SerialPort port;
+        private static BackgroundWorker worker;
 
         // Handshake
         //private static byte[] HANDSHAKE = new byte[1] {0xFF};
         private static int currentHandshakeState = 0;
-        public static bool isHandshaked = false;
+        //public static bool isHandshaked = false;
 
         // Meddelandespecifika variabler
-        private static byte[] messageBuffer;
+        private static List<byte> messageBuffer = new List<byte>();
         private static int currentRemainingBytes;
 
         #region Public Properties
@@ -72,10 +75,10 @@ namespace PcTool.Logic
         /// <summary>
         /// Returnerar om en handskakning är utförd. En handskakning måste utföras innan meddelanden kan böra skickas/mottas
         /// </summary>
-        public static bool IsHandshaked
+        /*public static bool IsHandshaked
         {
             get { return isHandshaked; }
-        }
+        }*/
 
         #endregion
 
@@ -85,13 +88,18 @@ namespace PcTool.Logic
                 return;
 
             port = new SerialPort(Properties.Settings.Default.COMport, Properties.Settings.Default.BaudRate, Parity.None, 8, StopBits.One);
-            port.ReadTimeout = 20000;
-            port.WriteTimeout = 20000;
-            port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            port.ReadTimeout = 200000;
+            port.WriteTimeout = 200000;
+
             try
             {
+                worker = new BackgroundWorker();
+                worker.DoWork += ReadBluetooth;
+
                 port.Open();
 
+                worker.RunWorkerAsync();
+                
                 if (ConnectionChanged != null)
                     ConnectionChanged();
             }
@@ -107,7 +115,8 @@ namespace PcTool.Logic
             if(port.IsOpen)
                 port.Close();
 
-            isHandshaked = false;
+            worker.CancelAsync();
+
             currentHandshakeState = 0;
             currentRemainingBytes = 0;
 
@@ -153,7 +162,7 @@ namespace PcTool.Logic
                 case Message.RecieveType.MAP_DATA:
                     if (len == 3)
                     {
-                        MapMessage mapmessage = new MapMessage(messageBuffer);
+                        MapMessage mapmessage = new MapMessage(messageBuffer.ToArray());
                         if (MapUpdate != null && mapmessage.x < 16 && mapmessage.y < 16)
                         {
                             MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
@@ -161,7 +170,7 @@ namespace PcTool.Logic
                     }
                     break;
                 case Message.RecieveType.DEBUG_DATA:
-                    DebugDataMessage ddmessage = new DebugDataMessage(messageBuffer);
+                    DebugDataMessage ddmessage = new DebugDataMessage(messageBuffer.ToArray());
                     if (DebugDataUpdate != null)
                         DebugDataUpdate(ddmessage.Data);
                     break;
@@ -198,122 +207,48 @@ namespace PcTool.Logic
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        private static void ReadBluetooth(object sender, DoWorkEventArgs e)
         {
-            if (!IsConnected)
-                return;
-            int bytesToRead = port.BytesToRead;
-            // Test för att kolla vilka bytes som kommer
-            //while (bytesToRead > 0)
-            //    if (newByte != null)
-            //        newByte((byte)port.ReadByte());
-            
-            // Läs av handshake om det inte redan gjorts
-            if (!isHandshaked)
+
+            while (IsConnected && !worker.CancellationPending)
             {
-                if (bytesToRead > 0)
+                if (port.BytesToRead > 0)
                 {
-                    byte[] b = new byte[1];
-                    switch (currentHandshakeState)
-                    {
-                        case 0:
-                            port.Read(b, 0, 1);
-                            if (b[0] == 1)
-                            {
-                                port.ReadExisting(); // Töm bufferten
-                                port.Write(new byte[1] { 0x2 }, 0, 1);
-                                currentHandshakeState = 1;
-                            }
-                            break;
-                        case 1:
-                            port.Read(b, 0, 1);
-                            if (b[0] == 1)
-                            {
-                                currentHandshakeState = 0;
-                            }
-                            else if (b[0] == 3)
-                            {
-                                // Handshake OK
-                                isHandshaked = true;
-                                if (ConnectionChanged != null)
-                                    ConnectionChanged();
-                            }
-                            break;
-                    }
-                }
-                /*while (!isHandshaked && bytesToRead > 0){
-                    if (port.ReadByte() == HANDSHAKE[currentHandshakePos])
-                    {
-                        currentHandshakePos++;
-                        if (currentHandshakePos >= HANDSHAKE.Length)
-                        {
-                            isHandshaked = true;
 
-                            if (ConnectionChanged != null)
-                                ConnectionChanged();
-                        }
-                        
-                    }
-                    else
-                    {
-                        // En felaktig byte var mottagen, börja om
-                        currentHandshakePos = 0;
-                    }
-                }*/
-                if (!isHandshaked)
-                    return;
-            }
-
-            if (bytesToRead == 0)
-                return;
-
-            // Om det är början på ett nytt meddelande
-            if (currentRemainingBytes == 0)
-            {
-                byte firstByte = (byte)port.ReadByte();
-                int length = (int)(firstByte & 31);
-                messageBuffer = new byte[length + 1];
-                messageBuffer[0] = firstByte;
-
-                currentRemainingBytes = (bytesToRead < length) ? (length - bytesToRead) : 0;
-                port.Read(messageBuffer, 1, (bytesToRead < length) ? bytesToRead : length);
-
-                // Om vi har ett helt meddelande
-                if(currentRemainingBytes==0)
-                    ParseMessage();
-                
-                // Om det finns bytes kvar i buffern, kör funktionen igen
-                if (bytesToRead > 0)
-                    DataReceivedHandler(sender, e);
-                
-            }
-            else
-            {
-                // Om buffern innehåller mindre eller lika många bytes som saknas för meddelandet
-                if (bytesToRead <= currentRemainingBytes)
-                {
-                    int bytesToReadTemp = bytesToRead;
-                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, bytesToRead);
-                    currentRemainingBytes -= bytesToReadTemp;
-
-                    // Om hela meddelandet nu är hämtat
                     if (currentRemainingBytes == 0)
-                        ParseMessage();
-                }
-                else
-                {
-                    // Om buffern innehåller FLER bytes av vad som behövs till meddelandet
-                    int bytesToReadCurrent = currentRemainingBytes;
-                    port.Read(messageBuffer, messageBuffer.Length - currentRemainingBytes, bytesToReadCurrent);
-                    currentRemainingBytes = 0;
+                    {
+                        byte firstByte = (byte)port.ReadByte();
+                        int length = (int)(firstByte & 31);
+                        messageBuffer = new List<byte>(length+1);
+                        messageBuffer.Add(firstByte);
 
-                    // Hela meddelandet är nu hämtat
-                    ParseMessage();
+                        currentRemainingBytes = length;
+                    }
 
-                    // Börja på nytt meddelande...
-                    DataReceivedHandler(sender, e);
+                    messageBuffer.Add(ReadByte());
+                    currentRemainingBytes--;
+
+                    // Om vi mottagit 5 0xFF i rad så vet vi att nästa byte som kommer är början på ett nytt meddelande
+                    if (currentHandshakeState == 5)
+                    {
+                        currentRemainingBytes = 0;
+                        currentHandshakeState = 0;
+                    }
+                    else if (currentRemainingBytes == 0) // Om hela meddelandet nu är hämtat
+                    {
+                        App.Current.Dispatcher.Invoke(new Action(() => ParseMessage()), null);
+                    }
+                }else{
+                    Thread.Sleep(10);
                 }
             }
+        }
+
+        private static byte ReadByte()
+        {
+            byte b = (byte)port.ReadByte();
+            currentHandshakeState = (b == 255) ? currentHandshakeState + 1 : 0;
+            return b;
         }
 
 #endregion

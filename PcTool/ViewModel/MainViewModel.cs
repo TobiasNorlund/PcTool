@@ -18,8 +18,8 @@ namespace PcTool.ViewModel
             ConnectCommand = new RelayCommand(() => RobotConnector.Connect(), delegate() { return !RobotConnector.IsConnected; });
             DisconnectCommand = new RelayCommand(() => RobotConnector.Disconnect(), delegate() { return RobotConnector.IsConnected; });
             EmergencyStopCommand = new RelayCommand(() => RobotConnector.SendEmergencyStop(), isCommandsEnabled);
-            SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsHandshaked; });
-            UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsHandshaked; });
+            SendManualCommand = new RelayCommand<string>((string c) => RobotConnector.SendCommand((ManualCommand)Enum.Parse(typeof(ManualCommand), c)), delegate(string s) { return RobotConnector.IsConnected; });
+            UpdateControlParamCommand = new RelayCommand<KeyValuePair<ControlParam, byte>>(UpdateControlParamHandler, delegate(KeyValuePair<ControlParam, byte> o) { return RobotConnector.IsConnected; });
 
             // Skapa karthantere
             Map = new MapHandler();
@@ -46,10 +46,10 @@ namespace PcTool.ViewModel
         /// <summary>
         /// Returnerar om en lyckad handskakning har genomförts
         /// </summary>
-        public bool IsHandshaked
+        /*public bool IsHandshaked
         {
             get { return RobotConnector.IsHandshaked; }
-        }
+        }*/
 
         private ObservableDictionary<string, int> _DebugDataDictionary;
         public ObservableDictionary<string, int> DebugDataDictionary
@@ -77,7 +77,6 @@ namespace PcTool.ViewModel
         private void onConnectionChanged()
         {
             RaisePropertyChanged("IsConnected");
-            RaisePropertyChanged("IsHandshaked");
 
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
@@ -85,17 +84,17 @@ namespace PcTool.ViewModel
             SendManualCommand.RaiseCanExecuteChanged();
             UpdateControlParamCommand.RaiseCanExecuteChanged();
 
-            if (IsHandshaked)
+            if (IsConnected)
             {
-                onHandshaked();
+                onConnected();
             }
-            else if(!IsConnected)
+            else
             {
                 onDisconnected();
             }
         }
 
-        private void onHandshaked()
+        private void onConnected()
         {
             // Sätt första rutan som fri
             Map.UpdatePosition(8, 8, true);
@@ -131,12 +130,12 @@ namespace PcTool.ViewModel
 
         private bool isCommandsEnabled()
         {
-            return RobotConnector.IsHandshaked;
+            return RobotConnector.IsConnected;
         }
 
         private bool isCommandsDisabled()
         {
-            return !RobotConnector.IsHandshaked;
+            return !RobotConnector.IsConnected;
         }
 
         #region Event Handlers
