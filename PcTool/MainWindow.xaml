@@ -81,10 +81,10 @@
                             			<TextBox x:Name="ControlParam3" Grid.Row="2" Grid.Column="1" />
                             			<TextBox x:Name="ControlParam4" Grid.Row="3" Grid.Column="1" />
                             			<TextBox x:Name="ControlParam5" Grid.Row="4" Grid.Column="1" />
-										<TextBox x:Name="ControlParam6" Grid.Row="5" Grid.Column="1" />
-										<TextBox x:Name="ControlParam7" Grid.Row="6" Grid.Column="1" />
-										
-										<Button Grid.Row="0" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam1">
+										<TextBox x:Name="ControlParam6" Grid.Row="5" Grid.Column="1" TextChanged="ControlParam6_TextChanged" />
+                                        <TextBox x:Name="ControlParam7" Grid.Row="6" Grid.Column="1" />
+
+                                        <Button Grid.Row="0" Grid.Column="2" Style="{DynamicResource ButtonStyle1}" Margin="1" Click="UpdateControlParam1">
 											<Button.Background>
 												<SolidColorBrush Color="#FF959595"/>
 											</Button.Background>

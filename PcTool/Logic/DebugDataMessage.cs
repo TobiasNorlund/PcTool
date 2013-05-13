@@ -26,7 +26,7 @@ namespace PcTool.Logic
             { 10, "Rot. vänster"},
             { 12, "x"},
             { 13, "y"},
-            {14, "theta"}
+            {14, "theta"},
         };
 
         #endregion
@@ -60,7 +60,7 @@ namespace PcTool.Logic
                             break;
                         case 12:
                         case 13:
-                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] / 2);
+                            Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] );
                             break;
                         case 14:
                             Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1]);

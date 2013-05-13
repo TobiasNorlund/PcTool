@@ -166,5 +166,10 @@ namespace PcTool
             ViewModel.UpdateControlParamCommand.Execute(new KeyValuePair<PcTool.Logic.ControlParam, byte>(PcTool.Logic.ControlParam.PowerLeftPair, Byte.Parse(ControlParam7.Text)));
         }
 
+        private void ControlParam6_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
     }
 }
