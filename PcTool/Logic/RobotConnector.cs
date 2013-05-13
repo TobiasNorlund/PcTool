@@ -95,6 +95,7 @@ namespace PcTool.Logic
             {
                 worker = new BackgroundWorker();
                 worker.DoWork += ReadBluetooth;
+                worker.WorkerSupportsCancellation = true;
 
                 port.Open();
 
@@ -214,19 +215,19 @@ namespace PcTool.Logic
             {
                 if (port.BytesToRead > 0)
                 {
+                    byte b = ReadByte();
 
                     if (currentRemainingBytes == 0)
                     {
-                        byte firstByte = (byte)port.ReadByte();
+                        byte firstByte = b;
                         int length = (int)(firstByte & 31);
                         messageBuffer = new List<byte>(length+1);
-                        messageBuffer.Add(firstByte);
 
                         currentRemainingBytes = length;
-                    }
+                    }else
+                        currentRemainingBytes--;
 
-                    messageBuffer.Add(ReadByte());
-                    currentRemainingBytes--;
+                    messageBuffer.Add(b);
 
                     // Om vi mottagit 5 0xFF i rad så vet vi att nästa byte som kommer är början på ett nytt meddelande
                     if (currentHandshakeState == 5)
@@ -239,7 +240,7 @@ namespace PcTool.Logic
                         App.Current.Dispatcher.Invoke(new Action(() => ParseMessage()), null);
                     }
                 }else{
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                 }
             }
         }
