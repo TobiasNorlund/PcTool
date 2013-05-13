@@ -75,5 +75,10 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>-->
         </Viewport3D>
+        <Button Content="Återställ" Height="23" Foreground="White" HorizontalAlignment="Left" Margin="12,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click">
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource Red1}"/>
+            </Button.Background>
+        </Button>
     </Grid>
 </UserControl>
