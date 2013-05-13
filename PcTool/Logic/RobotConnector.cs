@@ -154,7 +154,7 @@ namespace PcTool.Logic
                     if (len == 3)
                     {
                         MapMessage mapmessage = new MapMessage(messageBuffer);
-                        if (MapUpdate != null && mapmessage.x < 16 && mapmessage.y < 16)
+                        if (MapUpdate != null && mapmessage.x < 16 && mapmessage.y < 16 && 0 < mapmessage.x && 0 < mapmessage.y)
                         {
                             MapUpdate(mapmessage.x, mapmessage.y, mapmessage.isFree);
                         }
