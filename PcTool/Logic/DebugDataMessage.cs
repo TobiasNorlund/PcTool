@@ -26,7 +26,17 @@ namespace PcTool.Logic
             { 10, "Rot. vänster"},
             { 12, "x"},
             { 13, "y"},
-            {14, "theta"}
+            {14, "theta"},
+            {16, "Y est. forw."},
+            {17, "thetaReg"},
+            {18, "Long front"},
+            {19, "xRelReg"},
+            {20, "relYnew"},
+            {21, "vinkelhst. hjul"},
+            {22, "syncSpike"},
+            {23, "x pos"},
+            {24, "y pos"},
+            {25, "y sum"},
         };
 
         #endregion
@@ -54,12 +64,19 @@ namespace PcTool.Logic
                             Data.Add(DebugDataNamesLookup[msg[i]], (int)msg[i + 1] / 2);
                             break;
                         case 8:
+                        case 16:
+                        case 17:
+                        case 18:
+                        case 19:
+                        case 20:
+                        case 25:
                             Int16 gyro = BitConverter.ToInt16(new byte[2] {msg[i + 2], msg[i + 1]},0);// little endian på pc:n big endian på avr, dvs reverse bitt order
-                            Data.Add("Gyro", gyro);
+                            Data.Add(DebugDataNamesLookup[msg[i]], gyro);
                             i++;
                             break;
                         case 12:
                         case 13:
+                        case 21:
                             Data.Add(DebugDataNamesLookup[msg[i]], (sbyte)msg[i + 1] );
                             break;
                         case 14:
@@ -79,7 +96,7 @@ namespace PcTool.Logic
                             }
                             else
                             {
-                                /*// Vi har inget namn på datat, skriv IDt bara
+                                // Vi har inget namn på datat, skriv IDt bara
                                 if (!Data.Keys.Contains(msg[i].ToString()))
                                 {
                                     Data.Add(msg[i].ToString(), msg[i + 1]);
@@ -87,7 +104,7 @@ namespace PcTool.Logic
                                 else
                                 {
                                     Data[msg[i].ToString()] = msg[i + 1];
-                                }*/
+                                }
                             }
                             break;
                     }

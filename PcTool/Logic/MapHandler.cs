@@ -28,10 +28,14 @@ namespace PcTool.Logic
 
         public void UpdatePosition(int x, int y, bool isFree)
         {
+            // Om vi redan vet detta
+            if (map[x, y] == ((isFree) ? 1 : 2))
+                return;
+
             map[x, y] = (isFree) ? 1 : 2;
             if (PositionUpdated != null)
                 PositionUpdated(x-8, y-8, isFree);
-
+            /*
             // Kolla om en ny vägg är upptäckt
             if (((isFree && map[x + 1, y] == 2) || (!isFree && map[x + 1, y] == 1)) && !walls[x + 1, y, 0])
             {
@@ -56,7 +60,7 @@ namespace PcTool.Logic
                 walls[x, y, 1] = true;
                 if (WallDetected != null)
                     WallDetected(x - 8, y - 8, true);
-            }
+            }*/
         }
 
         public void Clear()

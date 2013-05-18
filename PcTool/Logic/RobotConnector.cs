@@ -237,7 +237,8 @@ namespace PcTool.Logic
                     }
                     else if (currentRemainingBytes == 0) // Om hela meddelandet nu är hämtat
                     {
-                        App.Current.Dispatcher.Invoke(new Action(() => ParseMessage()), null);
+                        if(App.Current != null) // Den sätts till null om vi håller på och stänga programmet
+                            App.Current.Dispatcher.Invoke(new Action(() => ParseMessage()), null);
                     }
                 }else{
                     Thread.Sleep(1);
